@@ -62,7 +62,7 @@ uint32_t hashString(const char* key, int length) {
 
 // Find an existing or empty entry by a given key.
 Entry* findEntry(Entry* entries, int capacity, String* key) {
-  uint32_t index = key->hash % capacity;  // Find the target entry.
+  uint32_t index = key->hash & (capacity - 1);  // Find the target entry.
   Entry* tombstone = NULL;
   for (;;) {
     Entry* entry = &entries[index];
@@ -75,7 +75,7 @@ Entry* findEntry(Entry* entries, int capacity, String* key) {
     } else if (entry->key == key) {
       return entry;  // We found the key. 
     }
-    index = (index + 1) % capacity;  // Linear probing (circular).
+    index = (index + 1) & (capacity - 1);  // Linear probing (circular).
   }
 }
 
